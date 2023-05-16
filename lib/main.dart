@@ -23,6 +23,22 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// A list of names
+const names = [
+  'Alice',
+  'Bob',
+  'Charlie',
+  'David',
+  'Eve',
+  'Fred',
+  'Ginny',
+  'Harriet',
+  'Ileana',
+  'Joseph',
+  'Kincaid',
+  'Larry'
+];
+
 // Home page screen
 class MyHomePage extends ConsumerWidget {
   /// Init homepage
