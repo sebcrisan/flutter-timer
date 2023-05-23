@@ -39,6 +39,18 @@ const names = [
   'Larry'
 ];
 
+// Ticker provider which counts every second
+final tickerProvider = StreamProvider((ref) => Stream.periodic(
+      const Duration(
+        seconds: 1,
+      ),
+      (i) => i + 1,
+    ));
+
+// Maps the ticker to the names depending on count of ticker
+final namesProvider = StreamProvider((ref) =>
+    ref.watch(tickerProvider.stream).map((count) => names.getRange(0, count)));
+
 // Home page screen
 class MyHomePage extends ConsumerWidget {
   /// Init homepage
@@ -49,14 +61,28 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// The names
+    final names = ref.watch(namesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Timer'),
-      ),
-      body: Column(
-        children: [],
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Timer'),
+        ),
+        body: names.when(
+          data: (names) {
+            return ListView.builder(
+                itemCount: names.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(names.elementAt(index)),
+                  );
+                });
+          },
+          error: (error, stacktrace) =>
+              const Text('Reached the end of the list'),
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ));
   }
 }
